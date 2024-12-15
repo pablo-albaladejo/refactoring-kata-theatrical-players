@@ -1,5 +1,4 @@
-import { statementPrinter } from "../src/statementPrinter";
-import {PerformanceSummary, Play} from "../src/performanceCalculator";
+import { statement } from "../src/statement";
 
 test("generates a detailed statement for a given performance summary with mixed play types", () => {
   //arrange
@@ -7,7 +6,7 @@ test("generates a detailed statement for a given performance summary with mixed 
   //act
   const plays = createAnExamplePlays();
   //assert
-  expect(statementPrinter(aSummary, plays)).toEqual(`Statement for BigCo
+  expect(statement(aSummary, plays)).toEqual(`Statement for BigCo
  Hamlet: $650.00 (55 seats)
  As You Like It: $580.00 (35 seats)
  Othello: $500.00 (40 seats)
@@ -22,7 +21,7 @@ test("does not allow an performance summary with unknown play types", () => {
   //act
   const plays = createAnotherExamplePlays();
   //assert
-  expect(() => statementPrinter(invoice, plays)).toThrow(/unknown type/);
+  expect(() => statement(invoice, plays)).toThrow(/unknown type/);
 });
 
 function createAnPerformanceSummary() {
@@ -50,7 +49,7 @@ function createAnExamplePlays() {
     hamlet: { name: "Hamlet", type: "tragedy" },
     "as-like": { name: "As You Like It", type: "comedy" },
     othello: { name: "Othello", type: "tragedy" }
-  } as Record<string, Play>;
+  };
 }
 
 function createAnotherPerformanceSummary() {
@@ -69,7 +68,7 @@ function createAnotherPerformanceSummary() {
   };
 }
 
-function createAnotherExamplePlays(): any {
+function createAnotherExamplePlays() {
   return {
     "henry-v": { name: "Henry V", type: "history" },
     "as-like": { name: "As You Like It", type: "pastoral" }
