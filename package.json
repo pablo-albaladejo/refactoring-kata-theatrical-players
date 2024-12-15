@@ -1,7 +1,7 @@
 {
   "name": "theatrical-players-refactoring-kata",
   "version": "1.0.0",
-  "description": "Example from first chapter of 'Refactoring' by Martin Fowler, 2nd Edition (https://www.thoughtworks.com/books/refactoring2)",
+  "description": "Example from first chapter of 'Refactoring' by Martin Fowler",
   "scripts": {
     "test": "jest",
     "compile": "tsc --noEmit",
