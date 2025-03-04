@@ -15,15 +15,19 @@ type PerformanceSummary = {
 
 export function statement(summary: PerformanceSummary, plays: Record<string, Play>) {
   let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `Statement for ${summary.customer}\n`;
 
   for (let performance of summary.performances) {
     const play = plays[performance.playID];
     let thisAmount = calculateAmountForPerformance(play, performance);
-    volumeCredits += calculateVolumeCredits(play, performance);
     result += ` ${play.name}: ${formatAmountUSD(thisAmount)} (${performance.audience} seats)\n`;
     totalAmount += thisAmount;
+  }
+
+  let volumeCredits = 0;
+  for (let performance of summary.performances) {
+    const play = plays[performance.playID];
+    volumeCredits += calculateVolumeCredits(play, performance);
   }
   result += `Amount owed is ${formatAmountUSD(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
