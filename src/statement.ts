@@ -17,11 +17,6 @@ export function statement(summary: PerformanceSummary, plays: Record<string, Pla
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `Statement for ${summary.customer}\n`;
-  const format = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format;
 
   for (let performance of summary.performances) {
     const play = plays[performance.playID];
@@ -29,14 +24,22 @@ export function statement(summary: PerformanceSummary, plays: Record<string, Pla
     // add volume credits
     volumeCredits += calculateVolumeCredits(play, performance);
     // print line for this order
-    result += ` ${play.name}: ${format(thisAmount / 100)} (${
+    result += ` ${play.name}: ${formatAmountUSD(thisAmount)} (${
       performance.audience
     } seats)\n`;
     totalAmount += thisAmount;
   }
-  result += `Amount owed is ${format(totalAmount / 100)}\n`;
+  result += `Amount owed is ${formatAmountUSD(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
   return result;
+}
+
+function formatAmountUSD(totalAmount: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(totalAmount / 100);
 }
 
 function calculateVolumeCredits(play: Play, performance: Performance) {
