@@ -24,14 +24,19 @@ export function statement(summary: PerformanceSummary, plays: Record<string, Pla
     totalAmount += thisAmount;
   }
 
+  let volumeCredits = calculateTotalCredits(summary, plays);
+  result += `Amount owed is ${formatAmountUSD(totalAmount)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;
+}
+
+function calculateTotalCredits(summary: PerformanceSummary, plays: Record<string, Play>) {
   let volumeCredits = 0;
   for (let performance of summary.performances) {
     const play = plays[performance.playID];
     volumeCredits += calculateVolumeCredits(play, performance);
   }
-  result += `Amount owed is ${formatAmountUSD(totalAmount)}\n`;
-  result += `You earned ${volumeCredits} credits\n`;
-  return result;
+  return volumeCredits;
 }
 
 function formatAmountUSD(totalAmount: number) {
