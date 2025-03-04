@@ -40,12 +40,9 @@ export function statement(summary: PerformanceSummary, plays: Record<string, Pla
 }
 
 function calculateVolumeCredits(performance: Performance, play: Play) {
-  let credits = 0;
   const baseCredits = Math.max(performance.audience - 30, 0);
-  credits += baseCredits;
   const comedyAttendeeCredits = Math.floor(performance.audience / 5);
-  if ("comedy" === play.type) credits += comedyAttendeeCredits;
-  return credits;
+  return "comedy" === play.type ? baseCredits + comedyAttendeeCredits : baseCredits;
 }
 
 function calculateAmountForPerformance(play: Play, performance: Performance) {
