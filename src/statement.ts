@@ -27,7 +27,7 @@ export function statement(summary: PerformanceSummary, plays: Record<string, Pla
     const play = plays[performance.playID];
     let thisAmount = calculateAmountForPerformance(play, performance);
     // add volume credits
-    volumeCredits += calculateVolumeCredits(performance, play);
+    volumeCredits += calculateVolumeCredits(play, performance);
     // print line for this order
     result += ` ${play.name}: ${format(thisAmount / 100)} (${
       performance.audience
@@ -39,7 +39,7 @@ export function statement(summary: PerformanceSummary, plays: Record<string, Pla
   return result;
 }
 
-function calculateVolumeCredits(performance: Performance, play: Play) {
+function calculateVolumeCredits(play: Play, performance: Performance) {
   const baseCredits = Math.max(performance.audience - 30, 0);
   const comedyAttendeeCredits = Math.floor(performance.audience / 5);
   return "comedy" === play.type ? baseCredits + comedyAttendeeCredits : baseCredits;
