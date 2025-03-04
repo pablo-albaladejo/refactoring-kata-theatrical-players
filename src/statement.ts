@@ -14,8 +14,6 @@ type PerformanceSummary = {
 };
 
 export function statement(summary: PerformanceSummary, plays: Record<string, Play>) {
-  let totalAmount = calculateTotalAmount(summary, plays);
-
   let result = `Statement for ${summary.customer}\n`;
   for (let performance of summary.performances) {
     const play = plays[performance.playID];
@@ -23,6 +21,7 @@ export function statement(summary: PerformanceSummary, plays: Record<string, Pla
     result += ` ${play.name}: ${formatAmountUSD(thisAmount)} (${performance.audience} seats)\n`;
   }
 
+  let totalAmount = calculateTotalAmount(summary, plays);
   result += `Amount owed is ${formatAmountUSD(totalAmount)}\n`;
   result += `You earned ${calculateTotalCredits(summary, plays)} credits\n`;
   return result;
