@@ -14,6 +14,10 @@ type PerformanceSummary = {
 };
 
 export function statement(summary: PerformanceSummary, plays: Record<string, Play>) {
+  return renderAsPlainText(summary, plays);
+}
+
+function renderAsPlainText(summary: PerformanceSummary, plays: Record<string, Play>) {
   let result = `Statement for ${summary.customer}\n`;
   for (let performance of summary.performances) {
     const play = plays[performance.playID];
