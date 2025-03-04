@@ -24,9 +24,8 @@ export function statement(summary: PerformanceSummary, plays: Record<string, Pla
     totalAmount += thisAmount;
   }
 
-  let volumeCredits = calculateTotalCredits(summary, plays);
   result += `Amount owed is ${formatAmountUSD(totalAmount)}\n`;
-  result += `You earned ${volumeCredits} credits\n`;
+  result += `You earned ${calculateTotalCredits(summary, plays)} credits\n`;
   return result;
 }
 
