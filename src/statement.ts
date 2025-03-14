@@ -13,21 +13,53 @@ type PerformanceSummary = {
   performances: Performance[];
 };
 
-export function statement(summary: PerformanceSummary, plays: Record<string, Play>) {
-  return renderAsPlainText(summary, plays);
+type Statement = {
+  customer: string;
+  performances: PerformanceDetails[];
+  totalAmountInUSD: string;
+  totalCredits: number;
+};
+
+type PerformanceDetails = {
+  name: string;
+  audience: number;
+  amountInUSD: string;
+};
+
+function createStatement(summary: PerformanceSummary, plays: Record<string, Play>): Statement {
+  return {
+    customer: summary.customer,
+    performances: summary.performances.map(performance => {
+      return createStatementDetails(plays, performance);
+    }),
+    totalAmountInUSD: formatAmountUSD(calculateTotalAmount(summary, plays)),
+    totalCredits: calculateTotalCredits(summary, plays),
+  };
 }
 
-function renderAsPlainText(summary: PerformanceSummary, plays: Record<string, Play>) {
-  let result = `Statement for ${summary.customer}\n`;
-  for (let performance of summary.performances) {
-    const play = plays[performance.playID];
-    let thisAmount = calculateAmountForPerformance(play, performance);
-    result += ` ${play.name}: ${formatAmountUSD(thisAmount)} (${performance.audience} seats)\n`;
+function createStatementDetails(plays: Record<string, Play>, performance: Performance): PerformanceDetails {
+  const play = plays[performance.playID];
+  const amount = calculateAmountForPerformance(play, performance);
+  return {
+    name: play.name,
+    audience: performance.audience,
+    amountInUSD: formatAmountUSD(amount),
+  };
+}
+
+export function statement(summary: PerformanceSummary, plays: Record<string, Play>) {
+  const statement = createStatement(summary, plays);
+  return renderAsPlainText(statement);
+}
+
+function renderAsPlainText(statement: Statement) {
+  let result = `Statement for ${statement.customer}\n`;
+  for (let performanceDetail of statement.performances) {
+    result += ` ${performanceDetail.name}: ${performanceDetail.amountInUSD} (${performanceDetail.audience} seats)\n`;
   }
 
-  let totalAmount = calculateTotalAmount(summary, plays);
-  result += `Amount owed is ${formatAmountUSD(totalAmount)}\n`;
-  result += `You earned ${calculateTotalCredits(summary, plays)} credits\n`;
+  result += `Amount owed is ${statement.totalAmountInUSD}\n`;
+  result += `You earned ${statement.totalCredits} credits\n`;
   return result;
 }
 
